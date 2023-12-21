@@ -1,0 +1,119 @@
+NOTE: tolong jika mau pakai query manual agar mencegah error maka di runnya satu2 sesuai arahan garis -----, terima kasih.
+
+CREATE DATABASE mysticgrills;
+
+CREATE TABLE users (
+    userId INT AUTO_INCREMENT PRIMARY KEY,
+    userRole VARCHAR(255),
+    userName VARCHAR(255),
+    userEmail VARCHAR(255),
+    userPassword VARCHAR(255)
+);
+
+CREATE TABLE menuitems (
+    menuItemId INT AUTO_INCREMENT PRIMARY KEY,
+    menuItemName VARCHAR(255),
+    menuItemDescription VARCHAR(255),
+    menuItemPrice DOUBLE
+);
+
+CREATE TABLE orders (
+    orderId INT AUTO_INCREMENT PRIMARY KEY,
+    orderUserId INT,
+    FOREIGN KEY (orderUserId) REFERENCES users(userId) ON DELETE CASCADE,
+    orderStatus VARCHAR(255),
+    orderDate DATE,
+    orderTotal DOUBLE
+);
+
+CREATE TABLE orderitems (
+    orderId INT,
+    menuItemId INT,
+    quantity INT,
+    PRIMARY KEY (orderId, menuItemId),
+    FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE,
+    FOREIGN KEY (menuItemId) REFERENCES menuitems(menuItemId) ON DELETE CASCADE
+);
+
+CREATE TABLE receipts (
+    receiptId INT AUTO_INCREMENT PRIMARY KEY,
+    receiptOrderId INT UNIQUE,
+    FOREIGN KEY (receiptOrderId) REFERENCES orders(orderId) ON DELETE CASCADE,
+    receiptPaymentAmount DOUBLE,
+    receiptPaymentDate DATE,
+    receiptPaymentType VARCHAR(255)
+);
+
+--------------------------------------------------------------
+
+INSERT INTO users (userRole, userName, userEmail, userPassword)
+VALUES ('Admin', 'Admin1', 'Admin1@gmail.com', 'Admin123');
+
+INSERT INTO users (userRole, userName, userEmail, userPassword)
+VALUES ('Chef', 'Chef1', 'Chef1@gmail.com', 'Chef123');
+
+INSERT INTO users (userRole, userName, userEmail, userPassword)
+VALUES ('Waiter', 'Waiter1', 'Waiter1@gmail.com', 'Waiter123');
+
+INSERT INTO users (userRole, userName, userEmail, userPassword)
+VALUES ('Cashier', 'Cashier1', 'Cashier1@gmail.com', 'Cashier123');
+
+INSERT INTO users (userRole, userName, userEmail, userPassword)
+VALUES ('Customer', 'Customer1', 'Customer1@gmail.com', 'Customer123');
+
+--------------------------------------
+
+INSERT INTO menuitems (menuItemName, menuItemDescription, menuItemPrice)
+VALUES ('Grilled Chicken', 'Juicy chicken marinated in herbs and grilled to perfection.', 7.99);
+
+INSERT INTO menuitems (menuItemName, menuItemDescription, menuItemPrice)
+VALUES ('Grilled Salmon', 'Fresh salmon fillet grilled with a special seasoning.', 10.99);
+
+INSERT INTO menuitems (menuItemName, menuItemDescription, menuItemPrice)
+VALUES ('Grilled Vegetables', 'Assorted vegetables grilled to enhance their flavors.', 5.49);
+
+INSERT INTO menuitems (menuItemName, menuItemDescription, menuItemPrice)
+VALUES ('BBQ Ribs', 'Tender pork ribs glazed in barbecue sauce.', 12.99);
+
+INSERT INTO menuitems (menuItemName, menuItemDescription, menuItemPrice)
+VALUES ('Grilled Steak', 'Premium beef steak grilled to your preference.', 15.99);
+
+-------------------------------------------------------------------------
+
+INSERT INTO Orders (orderUserId, orderStatus, orderDate, orderTotal)
+VALUES (5, 'Pending', DATE_ADD(NOW(), INTERVAL -3 DAY), 21.47);
+
+INSERT INTO Orders (orderUserId, orderStatus, orderDate, orderTotal)
+VALUES (5, 'Paid', DATE_ADD(NOW(), INTERVAL -2 DAY), 49.96);
+
+INSERT INTO Orders (orderUserId, orderStatus, orderDate, orderTotal)
+VALUES (5, 'Prepared', DATE_ADD(NOW(), INTERVAL -1 DAY), 47.96);
+
+INSERT INTO Orders (orderUserId, orderStatus, orderDate, orderTotal)
+VALUES (5, 'Served', NOW(), 29.46);
+
+INSERT INTO Orders (orderUserId, orderStatus, orderDate, orderTotal)
+VALUES (5, 'Cancel', DATE_ADD(NOW(), INTERVAL -4 DAY), 26.98);
+
+-----------------------------------------------------------------------------
+
+INSERT INTO OrderItems (orderId, menuItemId, quantity)
+VALUES (1, 1, 2), (1, 3, 1);
+
+INSERT INTO OrderItems (orderId, menuItemId, quantity)
+VALUES (2, 2, 1), (2, 4, 3);
+
+INSERT INTO OrderItems (orderId, menuItemId, quantity)
+VALUES (3, 5, 2), (3, 1, 2);
+
+INSERT INTO OrderItems (orderId, menuItemId, quantity)
+VALUES (4, 3, 3), (4, 4, 1);
+
+INSERT INTO OrderItems (orderId, menuItemId, quantity)
+VALUES (5, 2, 1), (5, 5, 1);
+
+-------------------------------------------------
+
+INSERT INTO receipts (receiptOrderId, receiptPaymentAmount, receiptPaymentDate, receiptPaymentType)
+VALUES (2, 49.96, DATE_ADD(NOW(), INTERVAL -2 DAY), 'Debit');
+
